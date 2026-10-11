@@ -4,6 +4,7 @@ import { ArrowLeft, BookOpenCheck, LayoutDashboard, Lock, PlayCircle } from 'luc
 const loginFeatures = [
   'تسجيل دخول آمن ومريح',
   'متابعة التقدم الفردي',
+  'لوحة مهام تعليمية مترابطة',
   'إدارة الدروس والاختبارات',
 ];
 
@@ -11,19 +12,17 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-100 px-6 py-10">
       <div className="grid w-full max-w-6xl overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-soft lg:grid-cols-2">
-        <div className="bg-gradient-to-br from-brand-600 to-brand-800 p-10 text-white">
+        <div className="bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 p-10 text-white">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-xl font-black">
-              E
-            </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-xl font-black">E</div>
             <div>
               <p className="text-2xl font-black">EduNova</p>
             </div>
           </div>
 
-          <h1 className="mt-10 text-4xl font-black leading-tight">مرحباً بعودتك إلى رحلتك التعليمية</h1>
+          <h1 className="mt-10 text-4xl font-black leading-tight">مرحباً بعودتك إلى رحلة التعلم</h1>
           <p className="mt-4 max-w-md text-base leading-7 text-brand-100">
-            تابع مشروعاتك، استكشف الدورات الجديدة، وواصل بناء مهاراتك مع تجربة تعليمية احترافية.
+            تابع مسارك، استكشف الدورات الجديدة، وواصل بناء مهاراتك من خلال منصة تعليمية متكاملة.
           </p>
 
           <div className="mt-8 space-y-4">
@@ -44,9 +43,7 @@ export default function LoginPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-600">تسجيل الدخول</p>
               <h2 className="mt-2 text-3xl font-black text-slate-900">الدخول إلى الحساب</h2>
             </div>
-            <Link href="/" className="text-sm font-medium text-brand-700">
-              العودة
-            </Link>
+            <Link href="/" className="text-sm font-medium text-brand-700">العودة</Link>
           </div>
 
           <form className="mt-8 space-y-5">
@@ -73,31 +70,19 @@ export default function LoginPage() {
                 <input type="checkbox" className="h-4 w-4 accent-brand-600" />
                 تذكرني
               </label>
-              <a href="#" className="text-brand-700">
-                نسيت كلمة المرور؟
-              </a>
+              <a href="#" className="text-brand-700">نسيت كلمة المرور؟</a>
             </div>
 
-            <Link
-              href="/dashboard"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-600 px-6 py-3 text-base font-semibold text-white transition hover:bg-brand-700"
-            >
-              <Lock size={18} />
-              تسجيل الدخول
+            <Link href="/dashboard" className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand-600 px-6 py-3 text-base font-semibold text-white transition hover:bg-brand-700">
+              <Lock size={18} /> تسجيل الدخول
             </Link>
 
             <div className="flex items-center gap-3 pt-2 text-sm text-slate-500">
-              <span className="h-px flex-1 bg-slate-200" />
-              أو
-              <span className="h-px flex-1 bg-slate-200" />
+              <span className="h-px flex-1 bg-slate-200" /> أو <span className="h-px flex-1 bg-slate-200" />
             </div>
 
-            <Link
-              href="/courses"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-base font-semibold text-slate-700 transition hover:border-brand-500 hover:text-brand-700"
-            >
-              <PlayCircle size={18} />
-              تصفح الدورات
+            <Link href="/courses" className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-base font-semibold text-slate-700 transition hover:border-brand-500 hover:text-brand-700">
+              <PlayCircle size={18} /> تصفح الدورات
             </Link>
           </form>
         </div>

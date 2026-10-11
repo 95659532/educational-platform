@@ -34,12 +34,8 @@ export default function DashboardPage() {
             <h1 className="mt-2 text-3xl font-black">مرحباً، محمد</h1>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700">
-              الصفحة الرئيسية
-            </Link>
-            <Link href="/courses" className="rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700">
-              متابعة الدورات
-            </Link>
+            <Link href="/" className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700">الصفحة الرئيسية</Link>
+            <Link href="/courses" className="rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700">متابعة الدورات</Link>
           </div>
         </header>
 
@@ -63,9 +59,7 @@ export default function DashboardPage() {
           <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-black text-slate-900">دوراتي الحالية</h2>
-              <Link href="/courses" className="inline-flex items-center gap-2 text-sm font-medium text-brand-700">
-                عرض الكل <ArrowRight size={16} />
-              </Link>
+              <Link href="/courses" className="inline-flex items-center gap-2 text-sm font-medium text-brand-700">عرض الكل <ArrowRight size={16} /></Link>
             </div>
 
             <div className="mt-6 space-y-5">
@@ -76,9 +70,7 @@ export default function DashboardPage() {
                       <p className="text-lg font-bold text-slate-900">{course.name}</p>
                       <p className="mt-1 text-sm text-slate-500">تاريخ التسليم: {course.due}</p>
                     </div>
-                    <span className="rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-700">
-                      {course.status}
-                    </span>
+                    <span className="rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-700">{course.status}</span>
                   </div>
 
                   <div className="mt-4">
@@ -87,10 +79,7 @@ export default function DashboardPage() {
                       <span>{course.progress}</span>
                     </div>
                     <div className="h-2.5 rounded-full bg-slate-200">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-brand-500 to-accent"
-                        style={{ width: course.progress }}
-                      />
+                      <div className="h-full rounded-full bg-gradient-to-r from-brand-500 to-accent" style={{ width: course.progress }} />
                     </div>
                   </div>
                 </div>
@@ -110,19 +99,14 @@ export default function DashboardPage() {
                 </div>
               </div>
               <button className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                <PlayCircle size={16} />
-                الانضمام إلى الجلسة
+                <PlayCircle size={16} /> الانضمام إلى الجلسة
               </button>
             </div>
 
             <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft">
               <h3 className="text-xl font-black text-slate-900">أهداف هذا الأسبوع</h3>
               <ul className="mt-5 space-y-4">
-                {[
-                  'إكمال وحدة Next.js المتقدمة',
-                  'حل واجب التصميم رقم 3',
-                  'مراجعة 3 دروس مسجلة',
-                ].map((goal) => (
+                {['إكمال وحدة Next.js المتقدمة', 'حل واجب التصميم رقم 3', 'مراجعة 3 دروس مسجلة'].map((goal) => (
                   <li key={goal} className="flex items-center gap-3 text-slate-600">
                     <CheckCircle2 className="text-emerald-500" size={18} />
                     <span>{goal}</span>
@@ -137,17 +121,12 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-black text-slate-900">روتين اليوم</h2>
             <div className="flex items-center gap-2 text-sm font-medium text-brand-700">
-              <ListTodo size={16} />
-              3 مهام معلقة
+              <ListTodo size={16} /> 3 مهام معلقة
             </div>
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {[
-              'مشاهدة فيديو HTML Fundamentals',
-              'إكمال اختبار البرمجة',
-              'مراجعة خطة المشروع النهائي',
-            ].map((task, index) => (
+            {['مشاهدة فيديو HTML Fundamentals', 'إكمال اختبار البرمجة', 'مراجعة خطة المشروع النهائي'].map((task, index) => (
               <div key={task} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                 <p className="text-sm text-slate-500">Task {index + 1}</p>
                 <p className="mt-3 font-semibold text-slate-800">{task}</p>

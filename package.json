@@ -1,17 +1,22 @@
 {
+  "version": "0.0.1",
   "name": "educational-platform",
-  "version": "2.0.0",
+  "description": "منصة تعليمية احترافية متكاملة",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "db:push": "prisma db push",
-    "db:reset": "prisma migrate reset"
+    "db:reset": "prisma migrate reset",
+    "db:seed": "node prisma/seed.js",
+    "setup": "node scripts/setup.js"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",
@@ -31,8 +36,13 @@
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.15",
     "postcss": "8.4.39",
+    "prettier": "^3.2.5",
     "prisma": "^5.7.1",
     "tailwindcss": "3.4.10",
     "typescript": "5.5.4"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }

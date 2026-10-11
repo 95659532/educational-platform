@@ -1,0 +1,376 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Model - نموذج المستخدم
+// يحتوي على بيانات جميع المستخدمين (طلاب، مدرسين، مشرفين)
+model User {
+  id            String    @id @default(cuid())
+  // المعرف الفريد للمستخدم
+  
+  name          String?
+  // اسم المستخدم
+  
+  email         String    @unique
+  // البريد الإلكتروني الفريد
+  
+  passwordHash  String
+  // كلمة المرور المشفرة باستخدام bcrypt
+  
+  phone         String?
+  // رقم الهاتف (اختياري)
+  
+  avatar        String?
+  // رابط الصورة الشخصية (اختياري)
+  
+  bio           String?
+  // النبذة الشخصية (اختياري)
+  
+  role          Role      @default(STUDENT)
+  // الدور: طالب / مدرس / مشرف
+  
+  isVerified    Boolean   @default(false)
+  // هل تم التحقق من البريد الإلكتروني
+  
+  createdAt     DateTime  @default(now())
+  // تاريخ إنشاء الحساب
+  
+  updatedAt     DateTime  @updatedAt
+  // تاريخ آخر تحديث
+  
+  // العلاقات
+  enrollments   Enrollment[]
+  // الدورات المشترك فيها الطالب
+  
+  instructorCourses Course[] @relation("InstructorCourses")
+  // الدورات التي يدرسها المدرس
+  
+  payments      Payment[]
+  // المدفوعات
+  
+  submissions   Assignment[]
+  // الواجبات المرسلة
+  
+  messages      ContactMessage[]
+  // رسائل التواصل
+}
+
+// Course Model - نموذج الدورة
+// يحتوي على بيانات جميع الدورات التعليمية
+model Course {
+  id            String    @id @default(cuid())
+  // المعرف الفريد للدورة
+  
+  title         String
+  // عنوان الدورة
+  
+  slug          String    @unique
+  // رابط الدورة المختصر (مثل: web-development)
+  
+  description   String    @db.Text
+  // وصف مفصل للدورة
+  
+  category      String
+  // فئة الدورة (برمجة، تصميم، إلخ)
+  
+  thumbnail     String?
+  // صورة الدورة (اختياري)
+  
+  price         Float
+  // سعر الدورة
+  
+  duration      String
+  // المدة (مثل: 8 أسابيع)
+  
+  level         String    @default("beginner")
+  // مستوى الدورة: مبتدئ / متوسط / متقدم
+  
+  rating        Float     @default(0)
+  // تقييم الدورة من 0-5
+  
+  studentsCount Int       @default(0)
+  // عدد الطلاب المسجلين
+  
+  instructor    User      @relation("InstructorCourses", fields: [instructorId], references: [id], onDelete: Cascade)
+  instructorId  String
+  // المدرس الذي يدرس الدورة
+  
+  isPublished   Boolean   @default(false)
+  // هل تم نشر الدورة
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // العلاقات
+  lessons       Lesson[]
+  // دروس الدورة
+  
+  enrollments   Enrollment[]
+  // الطلاب المسجلين في الدورة
+  
+  assignments   Assignment[]
+  // الواجبات في الدورة
+}
+
+// Lesson Model - نموذج الدرس
+// يحتوي على دروس كل دورة
+model Lesson {
+  id            String    @id @default(cuid())
+  // المعرف الفريد للدرس
+  
+  title         String
+  // عنوان الدرس
+  
+  description   String    @db.Text
+  // وصف الدرس
+  
+  content       String    @db.Text
+  // محتوى الدرس (يمكن أن يكون HTML)
+  
+  videoUrl      String?
+  // رابط الفيديو (اختياري)
+  
+  duration      Int?
+  // مدة الدرس بالدقائق
+  
+  order         Int
+  // ترتيب الدرس في الدورة
+  
+  course        Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId      String
+  // الدورة التابع لها الدرس
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // العلاقات
+  progress      Progress[]
+  // تقدم الطلاب في هذا الدرس
+  
+  assignments   Assignment[]
+  // الواجبات المرتبطة بهذا الدرس
+}
+
+// Enrollment Model - نموذج الاشتراك
+// يربط الطلاب بالدورات المشترك فيها
+model Enrollment {
+  id            String    @id @default(cuid())
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  // الطالب
+  
+  course        Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId      String
+  // الدورة
+  
+  progress      Float     @default(0)
+  // نسبة إنجاز الدورة (0-100)
+  
+  completedAt   DateTime?
+  // تاريخ إكمال الدورة (null إذا لم تكمل)
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@unique([userId, courseId])
+  // لا يمكن أن يشترك نفس الطالب في نفس الدورة مرتين
+}
+
+// Progress Model - نموذج التقدم
+// يتابع تقدم الطالب في كل درس
+model Progress {
+  id            String    @id @default(cuid())
+  
+  lesson        Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId      String
+  // الدرس
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  // الطالب
+  
+  isCompleted   Boolean   @default(false)
+  // هل أكمل الطالب هذا الدرس
+  
+  completedAt   DateTime?
+  // تاريخ إكمال الدرس
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@unique([userId, lessonId])
+}
+
+// Assignment Model - نموذج الواجب
+// يحتوي على الواجبات والاختبارات
+model Assignment {
+  id            String    @id @default(cuid())
+  
+  title         String
+  // عنوان الواجب
+  
+  description   String    @db.Text
+  // وصف الواجب
+  
+  course        Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId      String
+  // الدورة
+  
+  lesson        Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId      String
+  // الدرس المرتبط
+  
+  dueDate       DateTime
+  // تاريخ الاستحقاق
+  
+  points        Int       @default(100)
+  // الدرجات
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // العلاقات
+  submissions   Submission[]
+  // إرسالات الطلاب
+}
+
+// Submission Model - نموذج الإرسال
+// إرسالات الطلاب للواجبات
+model Submission {
+  id            String    @id @default(cuid())
+  
+  assignment    Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  assignmentId  String
+  // الواجب
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  // الطالب
+  
+  content       String    @db.Text
+  // محتوى الإرسال
+  
+  grade         Float?
+  // الدرجة (null إذا لم يتم التصحيح)
+  
+  feedback      String    @db.Text?
+  // التعليقات من المدرس
+  
+  submittedAt   DateTime  @default(now())
+  // تاريخ الإرسال
+  
+  gradeAt       DateTime?
+  // تاريخ التصحيح
+  
+  @@unique([userId, assignmentId])
+}
+
+// Payment Model - نموذج الدفع
+// يحتوي على سجل المدفوعات
+model Payment {
+  id            String    @id @default(cuid())
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  // المستخدم
+  
+  amount        Float
+  // المبلغ
+  
+  currency      String    @default("SAR")
+  // العملة
+  
+  status        PaymentStatus @default(PENDING)
+  // حالة الدفع
+  
+  transactionId String?
+  // معرف العملية من بوابة الدفع
+  
+  description   String?
+  // وصف الدفع
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// ContactMessage Model - نموذج رسالة التواصل
+// رسائل التواصل من الزوار
+model ContactMessage {
+  id            String    @id @default(cuid())
+  
+  name          String
+  // اسم المُرسل
+  
+  email         String
+  // بريد المُرسل
+  
+  message       String    @db.Text
+  // محتوى الرسالة
+  
+  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId        String?
+  // المستخدم إن كان مسجلاً
+  
+  isRead        Boolean   @default(false)
+  // هل تمت قراءة الرسالة
+  
+  createdAt     DateTime  @default(now())
+}
+
+// FAQ Model - نموذج الأسئلة الشائعة
+model FAQ {
+  id            String    @id @default(cuid())
+  
+  question      String
+  // السؤال
+  
+  answer        String    @db.Text
+  // الإجابة
+  
+  order         Int       @default(0)
+  // ترتيب السؤال
+  
+  isPublished   Boolean   @default(true)
+  // هل السؤال منشور
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// Testimonial Model - نموذج التقييم
+model Testimonial {
+  id            String    @id @default(cuid())
+  
+  name          String
+  role          String
+  quote         String    @db.Text
+  rating        Float
+  
+  isPublished   Boolean   @default(true)
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// Enums - التعريفات
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}

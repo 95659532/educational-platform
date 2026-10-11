@@ -1,0 +1,28 @@
+{
+  "buildCommand": "npx prisma generate && npm run build",
+  "devCommand": "next dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "nodeVersion": "18.x",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "envs": {
+    "preview": {
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "production": {
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  },
+  "regions": ["iad1"],
+  "functions": {
+    "api/**": {
+      "maxDuration": 30
+    }
+  }
+}

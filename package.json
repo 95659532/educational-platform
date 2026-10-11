@@ -1,22 +1,24 @@
 {
-  "version": "0.0.1",
   "name": "educational-platform",
-  "description": "منصة تعليمية احترافية متكاملة",
+  "version": "2.0.0",
+  "description": "Advanced Educational Platform - EdUNova",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "format": "prettier --write .",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "db:push": "prisma db push",
     "db:reset": "prisma migrate reset",
-    "db:seed": "node prisma/seed.js",
-    "setup": "node scripts/setup.js"
+    "db:seed": "prisma db seed",
+    "analyze": "ANALYZE=true npm run build"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",
@@ -24,25 +26,24 @@
     "jsonwebtoken": "^9.1.2",
     "lucide-react": "^0.453.0",
     "next": "14.2.15",
+    "next-auth": "^4.24.5",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^14.2.15",
+    "@types/bcryptjs": "^2.4.8",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "20.14.12",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
-    "autoprefixer": "10.4.19",
-    "eslint": "8.57.0",
-    "eslint-config-next": "14.2.15",
-    "postcss": "8.4.39",
-    "prettier": "^3.2.5",
+    "@types/node": "^20.14.12",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.15",
+    "postcss": "^8.4.39",
     "prisma": "^5.7.1",
-    "tailwindcss": "3.4.10",
-    "typescript": "5.5.4"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4"
   }
 }

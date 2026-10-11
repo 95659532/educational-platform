@@ -1,0 +1,21 @@
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+export async function getDashboardData() {
+  const [courses, students, payments, contactMessages, faqs] = await Promise.all([
+    prisma.course.count(),
+    prisma.user.count({ where: { role: 'STUDENT' } }),
+    prisma.payment.aggregate({ _sum: { amount: true } }),
+    prisma.contactMessage.count({ where: { isRead: false } }),
+    prisma.fAQ.count(),
+  ]);
+
+  return {
+    courses,
+    students,
+    revenue: payments._sum.amount || 0,
+    unreadMessages: contactMessages,
+    faqs,
+  };
+}

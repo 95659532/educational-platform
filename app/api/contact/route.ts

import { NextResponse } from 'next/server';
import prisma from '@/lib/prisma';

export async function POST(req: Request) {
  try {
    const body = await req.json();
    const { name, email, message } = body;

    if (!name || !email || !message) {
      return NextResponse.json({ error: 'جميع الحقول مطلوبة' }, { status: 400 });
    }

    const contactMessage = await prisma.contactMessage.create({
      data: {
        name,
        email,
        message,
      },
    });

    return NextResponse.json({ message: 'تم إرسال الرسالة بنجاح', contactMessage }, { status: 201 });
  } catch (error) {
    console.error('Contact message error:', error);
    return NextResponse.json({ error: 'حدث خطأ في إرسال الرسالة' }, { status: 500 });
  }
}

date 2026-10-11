@@ -1,0 +1,41 @@
+app/api/admin/overview/route.ts
+
+import { NextResponse } from 'next/server';
+import { verifyToken } from '@/lib/auth';
+import prisma from '@/lib/prisma';
+
+export async function GET(req: Request) {
+  try {
+    const authHeader = req.headers.get('authorization');
+    const token = authHeader?.replace('Bearer ', '');
+
+    if (!token) {
+      return NextResponse.json({ error: 'الرمز مطلوب' }, { status: 401 });
+    }
+
+    const decoded = verifyToken(token);
+
+    if (!decoded || decoded.role !== 'ADMIN') {
+      return NextResponse.json({ error: 'ليس لديك صلاحية الوصول' }, { status: 403 });
+    }
+
+    const [courses, students, revenue, unreadMessages, faqCount] = await Promise.all([
+      prisma.course.count(),
+      prisma.user.count({ where: { role: 'STUDENT' } }),
+      prisma.payment.aggregate({ _sum: { amount: true } }),
+      prisma.contactMessage.count({ where: { isRead: false } }),
+      prisma.fAQ.count(),
+    ]);
+
+    return NextResponse.json({
+      courses,
+      students,
+      revenue: revenue._sum.amount || 0,
+      unreadMessages,
+      faqCount,
+    }, { status: 200 });
+  } catch (error) {
+    console.error('Admin overview error:', error);
+    return NextResponse.json({ error: 'حدث خطأ في الخادم' }, { status: 500 });
+  }
+}
